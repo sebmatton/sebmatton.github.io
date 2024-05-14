@@ -11,9 +11,9 @@ https://github.com/sebmatton/jQuery-Flight-Indicators
 <head>
     <meta charset="utf-8">
     <!-- Syntax coloration -->
-    <link rel="stylesheet" type="text/css" href="examples_data/prism/prism.css" />
+    <link rel="stylesheet" type="text/css" href="_examples_data/prism/prism.css" />
     <!-- This page style -->
-    <link rel="stylesheet" type="text/css" href="examples_data/style.css" />
+    <link rel="stylesheet" type="text/css" href="_examples_data/style.css" />
     <!-- Flight Indicators library styles -->
     <link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
     <title>jQuery Flight Indicators Plugin</title>
@@ -40,21 +40,25 @@ https://github.com/sebmatton/jQuery-Flight-Indicators
     <p>This example shows a real time application for each type of indicator.</p>
     <div class="examples">
         <div>
+            <span id="airspeed"></span>
             <span id="attitude"></span>
+            <span id="altimeter"></span>            
+        </div><div>
+            <span id="turn_coordinator"></span>
             <span id="heading"></span>
             <span id="variometer"></span>
-        </div><div>
-            <span id="airspeed"></span>
-            <span id="altimeter"></span>
         </div>
     </div>
 
     <p>The code of this example is quite simple. The html :</p>
-    <p><pre><code class="language-javascript">&lt;span id=&quot;attitude&quot;&gt;&lt;/span&gt;
-&lt;span id=&quot;heading&quot;&gt;&lt;/span&gt;
-&lt;span id=&quot;variometer&quot;&gt;&lt;/span&gt;
-&lt;span id=&quot;airspeed&quot;&gt;&lt;/span&gt;
-&lt;span id=&quot;altimeter&quot;&gt;&lt;/span&gt;</code></pre></p>
+    <p><pre><code class="language-javascript">
+    &lt;span id=&quot;airspeed&quot;&gt;&lt;/span&gt;
+    &lt;span id=&quot;attitude&quot;&gt;&lt;/span&gt;
+    &lt;span id=&quot;altimeter&quot;&gt;&lt;/span&gt;
+    &lt;span id=&quot;turn_coordinator&quot;&gt;&lt;/span&gt;
+    &lt;span id=&quot;heading&quot;&gt;&lt;/span&gt;
+    &lt;span id=&quot;variometer&quot;&gt;&lt;/span&gt;
+    </code></pre></p>
     
     <p>And the javascript :</p>
     <p><pre><code class="language-javascript">// Dynamic examples
@@ -63,39 +67,46 @@ var heading = $.flightIndicator('#heading', 'heading', {heading:150, showBox:tru
 var variometer = $.flightIndicator('#variometer', 'variometer', {vario:-5, showBox:true});
 var airspeed = $.flightIndicator('#airspeed', 'airspeed', {showBox: false});
 var altimeter = $.flightIndicator('#altimeter', 'altimeter');
+var turn_coordinator = $.flightIndicator('#turn_coordinator', 'turn_coordinator', {turn:0});
 
 // Update at 20Hz
 var increment = 0;
 setInterval(function() {
+    // Airspeed update
+    airspeed.setAirSpeed(80+80*Math.sin(increment/10));
+
     // Attitude update
     attitude.setRoll(30*Math.sin(increment/10));
     attitude.setPitch(50*Math.sin(increment/20));
+
+    // Altimeter update
+    altimeter.setAltitude(10*increment);
+    altimeter.setPressure(1000+3*Math.sin(increment/50));
+    increment++;
     
+    // TC update
+    turn_coordinator.setTurn(30*Math.sin(increment/10));
+
     // Heading update
     heading.setHeading(increment);
     
     // Vario update
     variometer.setVario(2*Math.sin(increment/10));
     
-    // Airspeed update
-    airspeed.setAirSpeed(80+80*Math.sin(increment/10));
-    
-    // Altimeter update
-    altimeter.setAltitude(10*increment);
-    altimeter.setPressure(1000+3*Math.sin(increment/50));
-    increment++;
-}, 50);</code></pre></p>
+}, 50);   
+</code></pre></p>
 </div>
 
 <footer>
-    jQuery Flight Indicator plugin by Sébastien Matton - License GPLv3
+    jQuery Flight Indicator plugin by Sébastien Matton - License GPLv3<br/>
+    Turn Coordinator SVG from <a title="By Mysid [CC-BY-SA-3.0 (https://creativecommons.org/licenses/by-sa/3.0) or GFDL (https://www.gnu.org/licenses/fdl-1.3.html)], via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File%3ATurn_coordinator.svg">Wikimedia Commons</a>
 </footer>
 
 <!-- Syntax color -->
-<script src="examples_data/prism/prism.js"></script>
+<script src="_examples_data/prism/prism.js"></script>
 
 <!-- Importing jQuery library -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 
 <!-- Importing the FlightIndicators library -->
 <script src="js/jquery.flightindicators.js"></script>
@@ -108,29 +119,33 @@ var first_attitude = $.flightIndicator('#first_attitude', 'attitude', {size:350,
 var attitude = $.flightIndicator('#attitude', 'attitude', {roll:50, pitch:-20, size:200, showBox : true});
 var heading = $.flightIndicator('#heading', 'heading', {heading:150, showBox:true});
 var variometer = $.flightIndicator('#variometer', 'variometer', {vario:-5, showBox:true});
-var airspeed = $.flightIndicator('#airspeed', 'airspeed', {showBox: false});
+var airspeed = $.flightIndicator('#airspeed', 'airspeed', {showBox: true});
 var altimeter = $.flightIndicator('#altimeter', 'altimeter');
+var turn_coordinator = $.flightIndicator('#turn_coordinator', 'turn_coordinator', {turn:0});
 
 // Update at 20Hz
 var increment = 0;
 setInterval(function() {
+    // Airspeed update
+    airspeed.setAirSpeed(80+80*Math.sin(increment/10));
+
     // Attitude update
     attitude.setRoll(30*Math.sin(increment/10));
     attitude.setPitch(50*Math.sin(increment/20));
+
+    // Altimeter update
+    altimeter.setAltitude(10*increment);
+    altimeter.setPressure(1000+3*Math.sin(increment/50));
+    increment++;
     
+    // TC update - note that the TC appears opposite the angle of the attitude indicator, as it mirrors the actual wing up/down position
+    turn_coordinator.setTurn((30*Math.sin(increment/10))*-1);
+
     // Heading update
     heading.setHeading(increment);
     
     // Vario update
     variometer.setVario(2*Math.sin(increment/10));
-    
-    // Airspeed update
-    airspeed.setAirSpeed(80+80*Math.sin(increment/10));
-    
-    // Altimeter update
-    altimeter.setAltitude(10*increment);
-    altimeter.setPressure(1000+3*Math.sin(increment/50));
-    increment++;
 }, 50);
 </script>
 </body>
